@@ -1,0 +1,11 @@
+coverage==7.6.1
+dependence==1.0.3
+iniconfig==2.0.0
+jsonpointer==3.0.0
+packaging==24.2
+pluggy==1.5.0
+pytest-cov==5.0.0
+pytest==8.3.4
+setuptools==70.3.0
+tomli==2.2.1
+tomli_w==1.0.0

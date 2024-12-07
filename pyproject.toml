@@ -1,0 +1,131 @@
+[build-system]
+requires = [
+    "hatchling",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "git-some"
+version = "0.0.0"
+description = "Some Git utilities"
+readme = "README.md"
+license = "MIT"
+requires-python = "~=3.8"
+authors = [
+    { email = "david@belais.me" },
+]
+keywords = [
+    "git",
+]
+dependencies = []
+
+[project.scripts]
+git-some = "git_some.__main__:main"
+
+[project.urls]
+Documentation = "https://git-some.enorganic.org"
+Repository = "https://github.com/enorganic/git-some"
+
+[tool.hatch.build.targets.sdist]
+packages = [
+    "src/git_some",
+]
+sources = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/git_some",
+]
+sources = ["src"]
+
+[tool.hatch.envs.default]
+python = "3.8"
+dependencies = [
+    "mypy",
+    "pytest",
+    "ruff",
+    "dependence",
+]
+post-install-commands = [
+    "hatch run mypy --install-types --non-interactive || echo",
+]
+
+[tool.hatch.envs.default.scripts]
+lint = "ruff check . && ruff format --check . && mypy"
+
+[tool.hatch.envs.default.env-vars]
+PIP_CONSTRAINT = "default_requirements.txt"
+
+[tool.hatch.envs.docs]
+python = "3.13"
+dependencies = [
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "black",
+    "dependence",
+]
+
+[tool.hatch.envs.docs.env-vars]
+PIP_CONSTRAINT = "docs_requirements.txt"
+
+[tool.hatch.envs.test]
+dependencies = [
+    "pytest",
+    "pytest-cov",
+    "coverage[toml]",
+    "dependence",
+]
+
+[tool.hatch.envs.test.env-vars]
+PIP_CONSTRAINT = "test_requirements.txt"
+
+[tool.hatch.envs.test.scripts]
+test = "pytest --cov-config=pyproject.toml"
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+ignore = [
+    "F842",
+]
+extend-select = [
+    "E",
+    "F",
+    "UP",
+    "B",
+    "SIM",
+    "I",
+    "C",
+    "N",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 20
+
+[tool.black]
+line-length = 79
+target-version = [
+    "py38",
+    "py39",
+    "py310",
+    "py311",
+    "py312",
+    "py313",
+]
+
+[tool.mypy]
+python_version = "3.8"
+files = [
+    "src",
+    "tests",
+]
+exclude = [
+    "tests/projects",
+]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
