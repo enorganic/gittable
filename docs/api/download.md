@@ -1,1 +1,1 @@
-::: git-some.download
+::: git_some.download

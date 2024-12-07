@@ -6,8 +6,8 @@ nav:
 - Introduction: 'index.md'
 - CLI Reference: 'cli.md'
 - API Reference:
-    - freeze: 'api/freeze.md'
-    - update: 'api/update.md'
+    - download: 'api/download.md'
+    - tag-version: 'api/tag_version.md'
 - Contributing: 'contributing.md'
 theme:
   name: material
@@ -38,7 +38,6 @@ theme:
 plugins:
   - search
   - autorefs
-  - mkdocstrings
   - mkdocstrings:
       default_handler: python
       handlers:
