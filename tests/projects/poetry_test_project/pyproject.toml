@@ -1,0 +1,13 @@
+[build-system]
+requires = [
+    "poetry-core",
+]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "poetry-test-project"
+description = ""
+authors = [
+    "test@project.io"
+]
+version = "0.0.1"

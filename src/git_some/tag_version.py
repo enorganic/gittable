@@ -20,6 +20,8 @@ def _get_hatch_version(
     """
     if isinstance(directory, Path):
         directory = str(Path(directory).resolve())
+    current_directory: str = str(Path.cwd().resolve())
+    os.chdir(directory)
     hatch: Optional[str] = which("hatch")
     try:
         return (
@@ -29,6 +31,8 @@ def _get_hatch_version(
         )
     except Exception:
         return ""
+    finally:
+        os.chdir(current_directory)
 
 
 def _get_poetry_version(
@@ -39,6 +43,8 @@ def _get_poetry_version(
     """
     if isinstance(directory, Path):
         directory = str(Path(directory).resolve())
+    current_directory: str = str(Path.cwd().resolve())
+    os.chdir(directory)
     poetry: Optional[str] = which("poetry")
     try:
         return (
@@ -48,6 +54,8 @@ def _get_poetry_version(
         )
     except Exception:
         return ""
+    finally:
+        os.chdir(current_directory)
 
 
 def _get_pip_version(
@@ -155,7 +163,7 @@ def main() -> None:
     parser.add_argument(
         "directory",
         nargs="?",
-        default=os.path.curdir,
+        default=_CURRENT_WORKING_DIRECTORY,
         type=str,
         help=(
             "Your project directory. If not provided, the current "
