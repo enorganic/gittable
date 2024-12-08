@@ -9,11 +9,9 @@ from typing import Iterable, Optional, Union
 
 from git_some._utilities import get_exception_text
 
-_CURRENT_WORKING_DIRECTORY: Path = Path.cwd().resolve()
-
 
 def _get_hatch_version(
-    directory: Union[str, Path] = _CURRENT_WORKING_DIRECTORY,
+    directory: Union[str, Path] = os.path.curdir,
 ) -> str:
     """
     Get the version of the package using `hatch`, if available
@@ -36,7 +34,7 @@ def _get_hatch_version(
 
 
 def _get_poetry_version(
-    directory: Union[str, Path] = _CURRENT_WORKING_DIRECTORY,
+    directory: Union[str, Path] = os.path.curdir,
 ) -> str:
     """
     Get the version of the package using `poetry`, if available
@@ -59,7 +57,7 @@ def _get_poetry_version(
 
 
 def _get_pip_version(
-    directory: Union[str, Path] = _CURRENT_WORKING_DIRECTORY,
+    directory: Union[str, Path] = os.path.curdir,
 ) -> str:
     """
     Get the version of a package using `pip`
@@ -104,7 +102,7 @@ def _get_pip_version(
 
 
 def _get_python_project_version(
-    directory: Union[str, Path] = _CURRENT_WORKING_DIRECTORY,
+    directory: Union[str, Path] = "",
 ) -> str:
     """
     Get a python project's version. Currently supports `hatch`, `poetry`, and
@@ -118,7 +116,7 @@ def _get_python_project_version(
 
 
 def tag_version(
-    directory: Union[str, Path] = _CURRENT_WORKING_DIRECTORY, message: str = ""
+    directory: Union[str, Path] = os.path.curdir, message: str = ""
 ) -> str:
     """
     Tag your project with the package version number *if* no pre-existing
@@ -134,7 +132,7 @@ def tag_version(
     if isinstance(directory, Path):
         directory = str(Path(directory).resolve())
     version: str = _get_python_project_version(directory)
-    current_directory: str = str(_CURRENT_WORKING_DIRECTORY.resolve())
+    current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
     try:
         tags: Iterable[str] = map(
@@ -163,7 +161,7 @@ def main() -> None:
     parser.add_argument(
         "directory",
         nargs="?",
-        default=_CURRENT_WORKING_DIRECTORY,
+        default=os.path.curdir,
         type=str,
         help=(
             "Your project directory. If not provided, the current "
