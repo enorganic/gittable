@@ -25,8 +25,10 @@ def test_tag_version() -> None:
             rmtree(project_directory / ".git", ignore_errors=True)
             # Intialize a local git repository, and create a commit
             check_call(("git", "init"))
-            check_call(("git", "config", "user.email", "you@example.com"))
-            check_call(("git", "config", "user.name", "Your Name"))
+            check_call(
+                ("git", "config", "--local", "user.email", "you@example.com")
+            )
+            check_call(("git", "config", "--local", "user.name", "Your Name"))
             check_call(("git", "add", "."))
             check_call(("git", "commit", "-m", "*"))
             # Tag the local git repo with the version number
