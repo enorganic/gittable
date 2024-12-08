@@ -46,5 +46,7 @@ jobs:
         python-version: ${{ matrix.python }}
     - name: Install Hatch
       uses: pypa/hatch@install
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
     - name: test
       run: hatch run test:test
