@@ -102,7 +102,6 @@ def _get_pip_version(
             "install",
             "--no-deps",
             "--no-compile",
-            "--force-reinstall",
             "-e",
             directory,
         )

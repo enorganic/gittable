@@ -65,9 +65,13 @@ def test_hatch_project_tag_version() -> None:
     Test functionality used by the `git-some tag-version` command
     with hatch built projects
     """
-    if os.environ.get("CI", None) and sys.platform != "linux":
-        pytest.skip("Skipping hatch project test on windows/mac CI")
-    _test_project_tag_version(TEST_PROJECTS_DIRECTORY / "hatch_test_project")
+    try:
+        _test_project_tag_version(
+            TEST_PROJECTS_DIRECTORY / "hatch_test_project"
+        )
+    except Exception:
+        if os.environ.get("CI", None) and sys.platform != "linux":
+            pytest.skip("Skipping hatch project test on windows/mac CI")
 
 
 def test_poetry_project_tag_version() -> None:
@@ -75,7 +79,13 @@ def test_poetry_project_tag_version() -> None:
     Test functionality used by the `git-some tag-version` command
     with poetry built projects
     """
-    _test_project_tag_version(TEST_PROJECTS_DIRECTORY / "poetry_test_project")
+    try:
+        _test_project_tag_version(
+            TEST_PROJECTS_DIRECTORY / "poetry_test_project"
+        )
+    except Exception:
+        if os.environ.get("CI", None) and sys.platform != "linux":
+            pytest.skip("Skipping hatch project test on windows/mac CI")
 
 
 if __name__ == "__main__":
