@@ -44,13 +44,13 @@ dependencies = [
     "mypy",
     "pytest",
     "ruff",
-    "dependence",
+    "dependence~=1.0",
 ]
 pre-install-commands = [
-    "hatch run pip install --upgrade pip setuptools",
+    "pip install --upgrade pip setuptools",
 ]
 post-install-commands = [
-    "hatch run mypy --install-types --non-interactive || echo",
+    "mypy --install-types --non-interactive || echo",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -65,23 +65,28 @@ dependencies = [
     "mkdocs-material",
     "mkdocstrings[python]",
     "black",
-    "dependence",
+    "dependence~=1.0",
 ]
+pre-install-commands = []
+post-install-commands = []
 
 [tool.hatch.envs.docs.env-vars]
 PIP_CONSTRAINT = "docs_requirements.txt"
 
 [tool.hatch.envs.test]
-python = "3"
 dependencies = [
     "pytest",
     "pytest-cov",
     "coverage[toml]",
-    "dependence",
+    "dependence~=1.0",
 ]
 pre-install-commands = [
-    "hatch run test:pip install --upgrade pip setuptools",
+    "pip install --upgrade pip setuptools",
 ]
+post-install-commands = []
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.test.env-vars]
 PIP_CONSTRAINT = "test_requirements.txt"

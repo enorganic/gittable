@@ -45,13 +45,21 @@ upgrade:
 	 pyproject.toml > .requirements.txt && \
 	hatch run docs:pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
-	hatch run test:dependence freeze\
+	hatch run test.py3.8:dependence freeze\
 	 --include-pointer /tool/hatch/envs/test\
 	 --include-pointer /project\
 	 pyproject.toml > .requirements.txt && \
-	hatch run test:pip install --upgrade --upgrade-strategy eager\
+	hatch run test.py3.8:pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
 	rm .requirements.txt && \
+	hatch run test.py3.8:dependence freeze\
+	 -e pip \
+	 -e wheel \
+	 --include-pointer /tool/hatch/envs/test \
+	 . \
+	 pyproject.toml \
+	 > test_requirements.txt && \
+	hatch run test:pip install -r test_requirements.txt && \
 	make requirements
 
 # This will update pinned requirements to align with the
@@ -63,7 +71,7 @@ requirements:
 	 --include-pointer /project\
 	 pyproject.toml && \
 	hatch run docs:dependence update pyproject.toml --include-pointer /tool/hatch/envs/docs && \
-	hatch run test:dependence update pyproject.toml --include-pointer /tool/hatch/envs/test && \
+	hatch run test.py3.8:dependence update pyproject.toml --include-pointer /tool/hatch/envs/test && \
 	hatch run dependence freeze\
 	 -e pip \
 	 -e wheel \
@@ -78,7 +86,7 @@ requirements:
 	 . \
 	 pyproject.toml \
 	 > docs_requirements.txt && \
-	hatch run test:dependence freeze\
+	hatch run test.py3.8:dependence freeze\
 	 -e pip \
 	 -e wheel \
 	 --include-pointer /tool/hatch/envs/test \
