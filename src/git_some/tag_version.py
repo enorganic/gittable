@@ -7,7 +7,6 @@ from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
 from typing import Iterable, Tuple, Union
-from warnings import warn
 
 from git_some._utilities import check_output, get_exception_text
 
@@ -32,7 +31,7 @@ def _get_hatch_version(
             check_output((hatch, "version"), env={}).strip() if hatch else ""
         )
     except Exception:
-        warn(get_exception_text(), stacklevel=2)
+        pass
     finally:
         os.chdir(current_directory)
     return output
@@ -61,7 +60,7 @@ def _get_poetry_version(
             else ""
         )
     except Exception:
-        warn(get_exception_text(), stacklevel=2)
+        pass
     finally:
         os.chdir(current_directory)
     return output
@@ -101,7 +100,6 @@ def _get_pip_version(
         )
         return json.loads(check_output(command, env={}))[0]["version"]
     except Exception as error:
-        warn(get_exception_text(), stacklevel=1)
         output: str = ""
         if isinstance(error, CalledProcessError):
             output = (error.output or error.stderr or b"").decode().strip()
