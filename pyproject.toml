@@ -92,7 +92,7 @@ python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 PIP_CONSTRAINT = "test_requirements.txt"
 
 [tool.hatch.envs.test.scripts]
-test = "python -m pytest --cov-config=pyproject.toml"
+test = "python -m pytest -s -vv"
 
 [tool.ruff]
 line-length = 79
