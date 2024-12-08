@@ -98,7 +98,7 @@ def _get_pip_version(
             "--path",
             directory,
         )
-        return json.loads(check_output(command), env={})[0]["version"]
+        return json.loads(check_output(command, env={}))[0]["version"]
     except Exception as error:
         output: str = ""
         if isinstance(error, CalledProcessError):
