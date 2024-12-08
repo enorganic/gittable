@@ -82,8 +82,8 @@ def _get_pip_version(
             "-m",
             "pip",
             "install",
-            "--no-deps",
-            "--no-compile",
+            # "--no-deps",
+            # "--no-compile",
             "-e",
             directory,
         )
