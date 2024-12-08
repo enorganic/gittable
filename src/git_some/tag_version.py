@@ -16,8 +16,9 @@ def _get_hatch_version(
     """
     Get the version of the package using `hatch`, if available
     """
-    if isinstance(directory, Path):
-        directory = str(Path(directory).resolve())
+    if isinstance(directory, str):
+        directory = Path(directory)
+    directory = str(directory.resolve())
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
     hatch: Optional[str] = which("hatch")
@@ -62,8 +63,9 @@ def _get_pip_version(
     """
     Get the version of a package using `pip`
     """
-    if isinstance(directory, Path):
-        directory = str(Path(directory).resolve())
+    if isinstance(directory, str):
+        directory = Path(directory)
+    directory = str(directory.resolve())
     try:
         check_call(
             (
@@ -129,8 +131,9 @@ def tag_version(
     Returns:
         The version number
     """
-    if isinstance(directory, Path):
-        directory = str(Path(directory).resolve())
+    if isinstance(directory, str):
+        directory = Path(directory)
+    directory = str(directory.resolve())
     version: str = _get_python_project_version(directory)
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
