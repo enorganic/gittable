@@ -1,6 +1,8 @@
 import sys
+from pathlib import Path
+from subprocess import DEVNULL, PIPE, list2cmdline, run
 from traceback import format_exception
-from typing import Callable
+from typing import Callable, Dict, Optional, Tuple, Union
 from urllib.parse import ParseResult, urlparse, urlunparse
 from urllib.parse import quote as _quote
 
@@ -48,3 +50,35 @@ def get_exception_text() -> str:
     printing.
     """
     return "".join(format_exception(*sys.exc_info()))
+
+
+def check_output(
+    args: Tuple[str, ...],
+    cwd: Union[str, Path] = "",
+    echo: bool = False,
+    env: Optional[Dict[str, str]] = None,
+) -> str:
+    """
+    This function mimics `subprocess.check_output`, but redirects stderr
+    to DEVNULL, and ignores unicode decoding errors.
+
+    Parameters:
+
+    - command (Tuple[str, ...]): The command to run
+    """
+    if echo:
+        if cwd:
+            print("$", "cd", cwd, "&&", list2cmdline(args))
+        else:
+            print("$", list2cmdline(args))
+    output: str = run(
+        args,
+        stdout=PIPE,
+        stderr=DEVNULL,
+        check=True,
+        cwd=cwd or None,
+        env=env,
+    ).stdout.decode("utf-8", errors="ignore")
+    if echo:
+        print(output)
+    return output

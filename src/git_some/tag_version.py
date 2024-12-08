@@ -3,11 +3,12 @@ import json
 import os
 import sys
 from pathlib import Path
+from shlex import quote
 from shutil import which
-from subprocess import check_call, check_output
-from typing import Iterable, Optional, Union
+from subprocess import CalledProcessError, list2cmdline
+from typing import Iterable, Optional, Tuple, Union
 
-from git_some._utilities import get_exception_text
+from git_some._utilities import check_output, get_exception_text
 
 
 def _get_hatch_version(
@@ -22,16 +23,14 @@ def _get_hatch_version(
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
     hatch: Optional[str] = which("hatch")
+    output: str = ""
     try:
-        return (
-            check_output((hatch, "version"), text=True).strip()
-            if hatch
-            else ""
-        )
+        output = check_output((hatch, "version")).strip() if hatch else ""
     except Exception:
-        return ""
+        pass
     finally:
         os.chdir(current_directory)
+    return output
 
 
 def _get_poetry_version(
@@ -45,16 +44,18 @@ def _get_poetry_version(
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
     poetry: Optional[str] = which("poetry")
+    output: str = ""
     try:
-        return (
-            check_output((poetry, "version"), text=True).strip()
+        output = (
+            check_output((poetry, "version")).strip().rpartition(" ")[-1]
             if poetry
             else ""
         )
     except Exception:
-        return ""
+        pass
     finally:
         os.chdir(current_directory)
+    return output
 
 
 def _get_pip_version(
@@ -66,39 +67,43 @@ def _get_pip_version(
     if isinstance(directory, str):
         directory = Path(directory)
     directory = str(directory.resolve())
+    command: Tuple[str, ...] = ()
     try:
-        check_call(
-            (
-                sys.executable,
-                "-m",
-                "pip",
-                "install",
-                "--no-deps",
-                "--no-compile",
-                "-e",
-                directory,
-            ),
-            text=True,
+        command = (
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "--no-deps",
+            "--no-compile",
+            "-e",
+            directory,
         )
-        return json.loads(
-            check_output(
-                (
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "list",
-                    "--format",
-                    "json",
-                    "--path",
-                    directory,
-                ),
-                text=True,
-            )
-        )[0]["version"]
+        check_output(command)
+        command = (
+            sys.executable,
+            "-m",
+            "pip",
+            "list",
+            "--format",
+            "json",
+            "--path",
+            directory,
+        )
+        # env: Dict[str, str] = os.environ.copy()
+        # env.pop("PIP_CONSTRAINT", None)
+        return json.loads(check_output(command))[0]["version"]
     except Exception as error:
+        output: str = ""
+        if isinstance(error, CalledProcessError):
+            output = (error.output or error.stderr or b"").decode().strip()
+            if output:
+                output = f"{output}\n"
+        current_directory: str = str(Path.cwd().resolve())
         raise RuntimeError(
-            "Unable to determine the project version "
-            f"for: {directory}\n"
+            "Unable to determine the project version:\n"
+            f"$ cd {quote(current_directory)} && {list2cmdline(command)}\n"
+            f"{output}"
             f"{get_exception_text()}"
         ) from error
 
@@ -140,14 +145,12 @@ def tag_version(
     try:
         tags: Iterable[str] = map(
             str.strip,
-            check_output(
-                ("git", "tag"), encoding="utf-8", universal_newlines=True
-            )
-            .strip()
-            .split("\n"),
+            check_output(("git", "tag")).strip().split("\n"),
         )
         if version not in tags:
-            check_call(("git", "tag", "-a", version, "-m", message or version))
+            check_output(
+                ("git", "tag", "-a", version, "-m", message or version)
+            )
     finally:
         os.chdir(current_directory)
     return version

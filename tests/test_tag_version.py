@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from shutil import rmtree
 from subprocess import check_call, check_output
+from typing import Tuple
 
 import pytest
 
@@ -31,13 +32,27 @@ def test_tag_version() -> None:
             check_call(("git", "config", "--local", "user.name", "Your Name"))
             check_call(("git", "add", "."))
             check_call(("git", "commit", "-m", "*"))
-            # Tag the local git repo with the version number
-            version: str = tag_version()
+        finally:
+            os.chdir(current_directory)
+        # Tag the local git repo with the version number
+        # Note: This is executed from the user's working directory
+        # to avoid conflict with relative path environment variables
+        version: str = tag_version(project_directory)
+        # Return to the git project directory
+        os.chdir(project_directory)
+        try:
             # Verify that the tag was created successfully
-            assert version in check_output(
-                ("git", "tag"),
-                text=True,
-            ).strip().split("\n"), f"Version {version} not found in tags"
+            tags: Tuple[str, ...] = tuple(
+                check_output(
+                    ("git", "tag"),
+                    text=True,
+                )
+                .strip()
+                .split("\n")
+            )
+            assert (
+                version in tags
+            ), f"Version {version} not found in tags: {tags}"
         finally:
             os.chdir(current_directory)
             # Cleanup git configuration files
