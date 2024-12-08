@@ -25,7 +25,11 @@ def _get_hatch_version(
     hatch: Optional[str] = which("hatch")
     output: str = ""
     try:
-        output = check_output((hatch, "version")).strip() if hatch else ""
+        # Note: We pass an empty dictionary of environment variables
+        # to circumvent configuration issues caused by relative paths
+        output = (
+            check_output((hatch, "version"), env={}).strip() if hatch else ""
+        )
     except Exception:
         pass
     finally:
@@ -46,8 +50,12 @@ def _get_poetry_version(
     poetry: Optional[str] = which("poetry")
     output: str = ""
     try:
+        # Note: We pass an empty dictionary of environment variables
+        # to prevent configuration issues caused by relative paths
         output = (
-            check_output((poetry, "version")).strip().rpartition(" ")[-1]
+            check_output((poetry, "version"), env={})
+            .strip()
+            .rpartition(" ")[-1]
             if poetry
             else ""
         )
@@ -79,7 +87,7 @@ def _get_pip_version(
             "-e",
             directory,
         )
-        check_output(command)
+        check_output(command, env={})
         command = (
             sys.executable,
             "-m",
@@ -90,9 +98,7 @@ def _get_pip_version(
             "--path",
             directory,
         )
-        # env: Dict[str, str] = os.environ.copy()
-        # env.pop("PIP_CONSTRAINT", None)
-        return json.loads(check_output(command))[0]["version"]
+        return json.loads(check_output(command), env={})[0]["version"]
     except Exception as error:
         output: str = ""
         if isinstance(error, CalledProcessError):

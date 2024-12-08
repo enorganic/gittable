@@ -4,6 +4,7 @@ SHELL := bash
 # Create all environments
 install:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
+	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
 	hatch run pip install --upgrade pip && \
 	hatch run docs:pip install --upgrade pip && \
 	hatch run test:pip install --upgrade pip && \
@@ -14,6 +15,7 @@ install:
 # requirements)
 reinstall:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
+	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
 	echo "" > default_requirements.txt && \
 	echo "" > docs_requirements.txt && \
 	echo "" > test_requirements.txt && \
@@ -86,6 +88,8 @@ requirements:
 
 # Test & check linting/formatting (for local use only)
 test:
+	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
+	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
 	hatch run lint && hatch run test:test
 
 format:
