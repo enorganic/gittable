@@ -60,7 +60,7 @@ lint = "ruff check . && ruff format --check . && mypy"
 PIP_CONSTRAINT = "default_requirements.txt"
 
 [tool.hatch.envs.docs]
-python = "3.13"
+python = "3"
 dependencies = [
     "mkdocs-material",
     "mkdocstrings[python]",
@@ -72,6 +72,7 @@ dependencies = [
 PIP_CONSTRAINT = "docs_requirements.txt"
 
 [tool.hatch.envs.test]
+python = "3"
 dependencies = [
     "pytest",
     "pytest-cov",
