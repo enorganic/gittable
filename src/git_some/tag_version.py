@@ -6,7 +6,7 @@ from pathlib import Path
 from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
-from typing import Iterable, Optional, Tuple, Union
+from typing import Iterable, Tuple, Union
 from warnings import warn
 
 from git_some._utilities import check_output, get_exception_text
@@ -23,19 +23,30 @@ def _get_hatch_version(
     directory = str(directory.resolve())
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
-    hatch: Optional[str] = "hatch"  # which("hatch")
-    output: str = ""
-    try:
-        # Note: We pass an empty dictionary of environment variables
-        # to circumvent configuration issues caused by relative paths
-        output = (
-            check_output((hatch, "version"), env={}).strip() if hatch else ""
-        )
-    except Exception:
-        warn(get_exception_text(), stacklevel=2)
-    finally:
-        os.chdir(current_directory)
-    return output
+    hatch: str
+    for hatch in filter(
+        None,
+        (
+            which("hatch"),
+            "hatch",
+        ),
+    ):
+        output: str = ""
+        try:
+            # Note: We pass an empty dictionary of environment variables
+            # to circumvent configuration issues caused by relative paths
+            output = (
+                check_output((hatch, "version"), env={}).strip()
+                if hatch
+                else ""
+            )
+        except Exception:
+            warn(get_exception_text(), stacklevel=2)
+        finally:
+            os.chdir(current_directory)
+        if output:
+            return output
+    return ""
 
 
 def _get_poetry_version(
@@ -48,23 +59,32 @@ def _get_poetry_version(
         directory = str(Path(directory).resolve())
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
-    poetry: Optional[str] = which("poetry")
-    output: str = ""
-    try:
-        # Note: We pass an empty dictionary of environment variables
-        # to prevent configuration issues caused by relative paths
-        output = (
-            check_output((poetry, "version"), env={})
-            .strip()
-            .rpartition(" ")[-1]
-            if poetry
-            else ""
-        )
-    except Exception:
-        warn(get_exception_text(), stacklevel=2)
-    finally:
-        os.chdir(current_directory)
-    return output
+    poetry: str
+    for poetry in filter(
+        None,
+        (
+            which("poetry"),
+            "poetry",
+        ),
+    ):
+        output: str = ""
+        try:
+            # Note: We pass an empty dictionary of environment variables
+            # to prevent configuration issues caused by relative paths
+            output = (
+                check_output((poetry, "version"), env={})
+                .strip()
+                .rpartition(" ")[-1]
+                if poetry
+                else ""
+            )
+        except Exception:
+            warn(get_exception_text(), stacklevel=2)
+        finally:
+            os.chdir(current_directory)
+        if output:
+            return output
+    return ""
 
 
 def _get_pip_version(
