@@ -47,14 +47,14 @@ dependencies = [
     "dependence~=1.0",
 ]
 pre-install-commands = [
-    "pip install --upgrade pip setuptools",
+    "python -m pip install --upgrade pip setuptools",
 ]
 post-install-commands = [
-    "mypy --install-types --non-interactive || echo",
+    "python -m mypy --install-types --non-interactive || echo",
 ]
 
 [tool.hatch.envs.default.scripts]
-lint = "ruff check . && ruff format --check . && mypy"
+lint = "python -m ruff check . && python -m ruff format --check . && mypy"
 
 [tool.hatch.envs.default.env-vars]
 PIP_CONSTRAINT = "default_requirements.txt"
@@ -81,7 +81,7 @@ dependencies = [
     "dependence~=1.0",
 ]
 pre-install-commands = [
-    "pip install --upgrade pip setuptools",
+    "python -m pip install --upgrade pip setuptools",
 ]
 post-install-commands = []
 
@@ -92,7 +92,7 @@ python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 PIP_CONSTRAINT = "test_requirements.txt"
 
 [tool.hatch.envs.test.scripts]
-test = "pytest --cov-config=pyproject.toml"
+test = "python -m pytest --cov-config=pyproject.toml"
 
 [tool.ruff]
 line-length = 79
