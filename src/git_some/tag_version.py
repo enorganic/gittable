@@ -6,7 +6,7 @@ from pathlib import Path
 from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
-from typing import Dict, Iterable, Tuple, Union
+from typing import Iterable, Tuple, Union
 from warnings import warn
 
 from git_some._utilities import check_output, get_exception_text
@@ -25,13 +25,11 @@ def _get_hatch_version(
     os.chdir(directory)
     hatch: str = which("hatch") or "hatch"
     output: str = ""
-    env: Dict[str, str] = os.environ.copy()
-    env.pop("PIP_CONSTRAINT", None)
     try:
         # Note: We pass an empty dictionary of environment variables
         # to circumvent configuration issues caused by relative paths
         output = (
-            check_output((hatch, "version"), env=env).strip() if hatch else ""
+            check_output((hatch, "version"), env={}).strip() if hatch else ""
         )
     except Exception:
         warn(get_exception_text(), stacklevel=2)
@@ -53,8 +51,12 @@ def _get_poetry_version(
     poetry: str = which("poetry") or "poetry"
     output: str = ""
     try:
+        # Note: We pass an empty dictionary of environment variables
+        # to prevent configuration issues caused by relative paths
         output = (
-            check_output((poetry, "version")).strip().rpartition(" ")[-1]
+            check_output((poetry, "version"), env={})
+            .strip()
+            .rpartition(" ")[-1]
             if poetry
             else ""
         )
@@ -86,9 +88,7 @@ def _get_pip_version(
             "-e",
             directory,
         )
-        env: Dict[str, str] = os.environ.copy()
-        env.pop("PIP_CONSTRAINT", None)
-        check_output(command, env=env)
+        check_output(command, env={})
         command = (
             sys.executable,
             "-m",
@@ -99,7 +99,7 @@ def _get_pip_version(
             "--path",
             directory,
         )
-        return json.loads(check_output(command, env=env))[0]["version"]
+        return json.loads(check_output(command, env={}))[0]["version"]
     except Exception as error:
         warn(get_exception_text(), stacklevel=1)
         output: str = ""

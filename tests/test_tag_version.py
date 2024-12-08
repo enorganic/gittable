@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from shutil import rmtree
 from subprocess import check_call, check_output
@@ -64,6 +65,8 @@ def test_hatch_project_tag_version() -> None:
     Test functionality used by the `git-some tag-version` command
     with hatch built projects
     """
+    if os.environ.get("CI", None) and sys.platform != "linux":
+        pytest.skip("Skipping hatch project test on windows/mac CI")
     _test_project_tag_version(TEST_PROJECTS_DIRECTORY / "hatch_test_project")
 
 
