@@ -23,7 +23,7 @@ def _get_hatch_version(
     directory = str(directory.resolve())
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
-    hatch: Optional[str] = which("hatch")
+    hatch: Optional[str] = "hatch"  # which("hatch")
     output: str = ""
     try:
         # Note: We pass an empty dictionary of environment variables
