@@ -75,6 +75,8 @@ def _get_pip_version(
     if isinstance(directory, str):
         directory = Path(directory)
     directory = str(directory.resolve())
+    if not directory.endswith(os.sep):
+        directory = f"{directory}{os.sep}"
     command: Tuple[str, ...] = ()
     try:
         command = (
@@ -82,7 +84,7 @@ def _get_pip_version(
             "-m",
             "pip",
             "install",
-            "--no-deps",
+            # "--no-deps",
             # "--no-compile",
             "-e",
             directory,
