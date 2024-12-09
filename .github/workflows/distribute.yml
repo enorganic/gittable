@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    # - main
-    - none
+    - main
     paths:
     - pyproject.toml
     - .github/workflows/distribute.yml
