@@ -136,3 +136,7 @@ disallow_incomplete_defs = true
 
 [tool.coverage.report]
 fail_under = 80
+
+[tool.coverage.paths]
+source = ["src"]
+
