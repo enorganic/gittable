@@ -1,4 +1,4 @@
-# Contributing to git-some
+# Contributing to gittable
 
 ## For Enorganic Contributors and Code Owners
 
@@ -11,8 +11,8 @@
     ```bash
     cd ~/Code && \
     git clone\
-    https://github.com/enorganic/git-some.git git-some && \
-    cd git-some && \
+    https://github.com/enorganic/gittable.git gittable && \
+    cd gittable && \
     make
     ```
 

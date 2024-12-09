@@ -6,7 +6,7 @@ from typing import List
 
 import pytest
 
-from git_some.download import download
+from gittable.download import download
 
 PROJECT_DIRECTORY: str = os.path.join(
     os.path.dirname(os.path.dirname(__file__))
@@ -18,7 +18,7 @@ RELATIVE_FILE_PATH: str = os.path.relpath(
 
 def test_git_download() -> None:
     """
-    Test functionality used by the `git-some download` command
+    Test functionality used by the `gittable download` command
     """
     temp_directory: str
     if os.name == "nt" and ("CI" in os.environ):

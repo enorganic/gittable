@@ -1,6 +1,6 @@
-site_name: git-some
-site_url: https://enorganic.github.io/git-some/
-repo_url: https://github.com/enorganic/git-some/
+site_name: gittable
+site_url: https://enorganic.github.io/gittable/
+repo_url: https://github.com/enorganic/gittable/
 edit_uri: blob/main/docs/
 nav:
 - Introduction: 'index.md'

@@ -7,8 +7,8 @@ from typing import Tuple
 
 import pytest
 
-from git_some._utilities import check_output
-from git_some.tag_version import tag_version
+from gittable._utilities import check_output
+from gittable.tag_version import tag_version
 
 TEST_PROJECTS_DIRECTORY: Path = Path(__file__).resolve().parent / "projects"
 GIT: str = which("git") or "git"
@@ -52,7 +52,7 @@ def _test_project_tag_version(project_directory: Path) -> None:
 
 def test_setuptools_project_tag_version() -> None:
     """
-    Test functionality used by the `git-some tag-version` command
+    Test functionality used by the `gittable tag-version` command
     with setuptools built projects
     """
     _test_project_tag_version(TEST_PROJECTS_DIRECTORY / "test_project_a")
@@ -61,7 +61,7 @@ def test_setuptools_project_tag_version() -> None:
 
 def test_hatch_project_tag_version() -> None:
     """
-    Test functionality used by the `git-some tag-version` command
+    Test functionality used by the `gittable tag-version` command
     with hatch built projects
     """
     try:
@@ -75,7 +75,7 @@ def test_hatch_project_tag_version() -> None:
 
 def test_poetry_project_tag_version() -> None:
     """
-    Test functionality used by the `git-some tag-version` command
+    Test functionality used by the `gittable tag-version` command
     with poetry built projects
     """
     try:
