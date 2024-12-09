@@ -16,7 +16,3 @@ You can install `gittable` with pip:
 ```shell
 pip3 install gittable
 ```
-
-# Introduction
-
-TODO
