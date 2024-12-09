@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gittable"
-version = "0.0.0"
+version = "0.0.1"
 description = "Some Git utilities"
 readme = "README.md"
 license = "MIT"
