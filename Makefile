@@ -97,7 +97,7 @@ requirements:
 test:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	hatch run lint && hatch test
+	hatch run lint && hatch test -c
 
 format:
 	hatch run ruff check --select I --fix . && \
