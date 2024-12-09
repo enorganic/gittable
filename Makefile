@@ -1,14 +1,14 @@
 SHELL := bash
 .PHONY: docs
+PYTHON_VERSION := 3.8
 
 # Create all environments
 install:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	hatch run pip install --upgrade pip && \
-	hatch run docs:pip install --upgrade pip && \
-	hatch run test:pip install --upgrade pip && \
-	{ hatch run mypy --install-types --non-interactive || echo "" ; } && \
+	hatch env create default && \
+	hatch env create docs && \
+	hatch env create hatch-test && \
 	echo "Installation complete"
 
 # Re-create all environments, from scratch (no reference to pinned
@@ -45,21 +45,20 @@ upgrade:
 	 pyproject.toml > .requirements.txt && \
 	hatch run docs:pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
-	hatch run test.py3.8:dependence freeze\
-	 --include-pointer /tool/hatch/envs/test\
+	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
+	 --include-pointer /tool/hatch/envs/hatch-test\
 	 --include-pointer /project\
 	 pyproject.toml > .requirements.txt && \
-	hatch run test.py3.8:pip install --upgrade --upgrade-strategy eager\
+	hatch run hatch-test.py$(PYTHON_VERSION):pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
 	rm .requirements.txt && \
-	hatch run test.py3.8:dependence freeze\
+	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
 	 -e pip \
 	 -e wheel \
-	 --include-pointer /tool/hatch/envs/test \
+	 --include-pointer /tool/hatch/envs/hatch-test \
 	 . \
 	 pyproject.toml \
 	 > test_requirements.txt && \
-	hatch run test:pip install -r test_requirements.txt && \
 	make requirements
 
 # This will update pinned requirements to align with the
@@ -71,7 +70,7 @@ requirements:
 	 --include-pointer /project\
 	 pyproject.toml && \
 	hatch run docs:dependence update pyproject.toml --include-pointer /tool/hatch/envs/docs && \
-	hatch run test.py3.8:dependence update pyproject.toml --include-pointer /tool/hatch/envs/test && \
+	hatch run hatch-test.py$(PYTHON_VERSION):dependence update pyproject.toml --include-pointer /tool/hatch/envs/test && \
 	hatch run dependence freeze\
 	 -e pip \
 	 -e wheel \
@@ -86,10 +85,10 @@ requirements:
 	 . \
 	 pyproject.toml \
 	 > docs_requirements.txt && \
-	hatch run test.py3.8:dependence freeze\
+	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
 	 -e pip \
 	 -e wheel \
-	 --include-pointer /tool/hatch/envs/test \
+	 --include-pointer /tool/hatch/envs/hatch-test \
 	 . \
 	 pyproject.toml \
 	 > test_requirements.txt
@@ -98,7 +97,7 @@ requirements:
 test:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	hatch run lint && hatch run test:test
+	hatch run lint && hatch test -c
 
 format:
 	hatch run ruff check --select I --fix . && \
