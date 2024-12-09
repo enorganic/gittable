@@ -211,7 +211,9 @@ def main() -> None:
         ),
     )
     arguments: argparse.Namespace = parser.parse_args()
-    tag_version(directory=arguments.directory, message=arguments.message)
+    print(
+        tag_version(directory=arguments.directory, message=arguments.message)
+    )
 
 
 if __name__ == "__main__":

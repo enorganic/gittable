@@ -1,15 +1,18 @@
 import os
 import sys
 from pathlib import Path
-from shutil import rmtree
-from subprocess import check_call, check_output
+from shutil import rmtree, which
+from subprocess import check_call
 from typing import Tuple
 
 import pytest
 
-from git_some.tag_version import tag_version
+from git_some._utilities import check_output
+
+# from git_some.tag_version import tag_version
 
 TEST_PROJECTS_DIRECTORY: Path = Path(__file__).resolve().parent / "projects"
+GIT: str = which("git") or "git"
 
 
 def _test_project_tag_version(project_directory: Path) -> None:
@@ -19,27 +22,33 @@ def _test_project_tag_version(project_directory: Path) -> None:
         # Delete git configuration files, if they exist
         rmtree(project_directory / ".git", ignore_errors=True)
         # Intialize a local git repository, and create a commit
-        check_call(("git", "init"))
-        check_call(
-            ("git", "config", "--local", "user.email", "you@example.com")
-        )
-        check_call(("git", "config", "--local", "user.name", "Your Name"))
-        check_call(("git", "add", "."))
-        check_call(("git", "commit", "-m", "*"))
+        check_call((GIT, "init"))
+        check_call((GIT, "config", "--local", "user.email", "you@example.com"))
+        check_call((GIT, "config", "--local", "user.name", "Your Name"))
+        check_call((GIT, "add", "."))
+        check_call((GIT, "commit", "-m", "*"))
     finally:
         os.chdir(current_directory)
     # Tag the local git repo with the version number
     # Note: This is executed from the user's working directory
     # to avoid conflict with relative path environment variables
-    version: str = tag_version(project_directory)
+    # version: str = tag_version(project_directory)
+    version: str = check_output(
+        (
+            sys.executable,
+            "-m",
+            "git_some",
+            "tag-version",
+            str(project_directory),
+        )
+    ).strip()
     # Return to the git project directory
     os.chdir(project_directory)
     try:
         # Verify that the tag was created successfully
         tags: Tuple[str, ...] = tuple(
             check_output(
-                ("git", "tag"),
-                text=True,
+                (GIT, "tag"),
             )
             .strip()
             .split("\n")
