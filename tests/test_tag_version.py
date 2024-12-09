@@ -8,8 +8,7 @@ from typing import Tuple
 import pytest
 
 from git_some._utilities import check_output
-
-# from git_some.tag_version import tag_version
+from git_some.tag_version import tag_version
 
 TEST_PROJECTS_DIRECTORY: Path = Path(__file__).resolve().parent / "projects"
 GIT: str = which("git") or "git"
@@ -32,16 +31,7 @@ def _test_project_tag_version(project_directory: Path) -> None:
     # Tag the local git repo with the version number
     # Note: This is executed from the user's working directory
     # to avoid conflict with relative path environment variables
-    # version: str = tag_version(project_directory)
-    version: str = check_output(
-        (
-            sys.executable,
-            "-m",
-            "git_some",
-            "tag-version",
-            str(project_directory),
-        )
-    ).strip()
+    version: str = tag_version(project_directory)
     # Return to the git project directory
     os.chdir(project_directory)
     try:

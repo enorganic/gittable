@@ -14,6 +14,9 @@ Commands:
 
 ## git-some tag-version
 
+Note: Currently, `setuptools`, `hatch`, and `poetry` python projects are
+supported.
+
 ```console
 $ git-some tag-version -h
 usage: git-some tag-version [-h] [-m MESSAGE] [directory]
