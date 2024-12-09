@@ -88,7 +88,7 @@ def download(
 
 def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        prog="git-some download",
+        prog="gittable download",
         description=(
             "Download files from a git repository matching one or more "
             "specified file names or glob patterns"

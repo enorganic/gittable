@@ -1,1 +1,1 @@
-::: git_some.tag_version
+::: gittable.tag_version

@@ -1,9 +1,9 @@
 # Command Line Interface
 
 ```console
-$ git-some -h
+$ gittable -h
 Usage:
-  git-some <command> [options]
+  gittable <command> [options]
 
 Commands:
   download                    Download files from a GIT repo matching one or
@@ -12,14 +12,14 @@ Commands:
                               for that version doesn't already exist.
 ```
 
-## git-some tag-version
+## gittable tag-version
 
 Note: Currently, `setuptools`, `hatch`, and `poetry` python projects are
 supported.
 
 ```console
-$ git-some tag-version -h
-usage: git-some tag-version [-h] [-m MESSAGE] [directory]
+$ gittable tag-version -h
+usage: gittable tag-version [-h] [-m MESSAGE] [directory]
 
 Tag your repo with the project version, if a tag for that version
 doesn't already exist.
@@ -35,11 +35,11 @@ optional arguments:
                         number is used.
 ```
 
-## git-some download
+## gittable download
 
 ```console
-$ git-some download -h
-usage: git-some download [-h] [-b BRANCH] [-d DIRECTORY] [-u USER]
+$ gittable download -h
+usage: gittable download [-h] [-b BRANCH] [-d DIRECTORY] [-u USER]
                          [-p PASSWORD]
                          repo [file [file ...]]
 

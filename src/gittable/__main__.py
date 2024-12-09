@@ -9,7 +9,7 @@ from ._utilities import get_exception_text
 def _print_help() -> None:
     print(
         "Usage:\n"
-        "  git-some <command> [options]\n\n"
+        "  gittable <command> [options]\n\n"
         "Commands:\n"
         "  download                    Download files from a GIT repo "
         "matching one or more\n"

@@ -14,7 +14,7 @@ from shutil import which
 from subprocess import CalledProcessError, list2cmdline
 from typing import Iterable, Tuple, Union
 
-from git_some._utilities import check_output, get_exception_text
+from gittable._utilities import check_output, get_exception_text
 
 
 @cache
@@ -184,7 +184,7 @@ def tag_version(
 
 def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
-        prog="git-some tag-version",
+        prog="gittable tag-version",
         description=(
             "Tag your repo with the package version, if a tag "
             "for that version doesn't already exist."
