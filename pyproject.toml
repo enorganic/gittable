@@ -56,9 +56,6 @@ post-install-commands = [
 [tool.hatch.envs.default.scripts]
 lint = "ruff check . && ruff format --check . && mypy"
 
-[tool.hatch.envs.default.env-vars]
-PIP_CONSTRAINT = "default_requirements.txt"
-
 [tool.hatch.envs.docs]
 python = "3.13"
 dependencies = [
@@ -70,9 +67,6 @@ dependencies = [
 pre-install-commands = []
 post-install-commands = []
 
-[tool.hatch.envs.docs.env-vars]
-PIP_CONSTRAINT = "docs_requirements.txt"
-
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
     "dependence~=1.0",
@@ -82,9 +76,6 @@ post-install-commands = []
 
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-
-[tool.hatch.envs.hatch-test.env-vars]
-PIP_CONSTRAINT = "test_requirements.txt"
 
 [tool.ruff]
 line-length = 79

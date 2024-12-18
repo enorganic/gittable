@@ -1,6 +1,6 @@
 SHELL := bash
 .PHONY: docs
-PYTHON_VERSION := 3.8
+MINIMUM_PYTHON_VERSION := 3.8
 
 # Create all environments
 install:
@@ -16,9 +16,6 @@ install:
 reinstall:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	echo "" > default_requirements.txt && \
-	echo "" > docs_requirements.txt && \
-	echo "" > test_requirements.txt && \
 	hatch env prune && \
 	make && \
 	make requirements
@@ -29,9 +26,6 @@ distribute:
 # This will upgrade all requirements, and refresh pinned requirements to
 # match
 upgrade:
-	echo "" > default_requirements.txt && \
-	echo "" > docs_requirements.txt && \
-	echo "" > test_requirements.txt && \
 	hatch run dependence freeze\
 	 --include-pointer /tool/hatch/envs/default\
 	 --include-pointer /project\
@@ -45,20 +39,13 @@ upgrade:
 	 pyproject.toml > .requirements.txt && \
 	hatch run docs:pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
-	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
+	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence freeze\
 	 --include-pointer /tool/hatch/envs/hatch-test\
 	 --include-pointer /project\
 	 pyproject.toml > .requirements.txt && \
-	hatch run hatch-test.py$(PYTHON_VERSION):pip install --upgrade --upgrade-strategy eager\
+	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
 	rm .requirements.txt && \
-	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
-	 -e pip \
-	 -e wheel \
-	 --include-pointer /tool/hatch/envs/hatch-test \
-	 . \
-	 pyproject.toml \
-	 > test_requirements.txt && \
 	make requirements
 
 # This will update pinned requirements to align with the
@@ -70,28 +57,7 @@ requirements:
 	 --include-pointer /project\
 	 pyproject.toml && \
 	hatch run docs:dependence update pyproject.toml --include-pointer /tool/hatch/envs/docs && \
-	hatch run hatch-test.py$(PYTHON_VERSION):dependence update pyproject.toml --include-pointer /tool/hatch/envs/test && \
-	hatch run dependence freeze\
-	 -e pip \
-	 -e wheel \
-	 --include-pointer /tool/hatch/envs/default \
-	 . \
-	 pyproject.toml \
-	 > default_requirements.txt && \
-	hatch run docs:dependence freeze\
-	 -e pip \
-	 -e wheel \
-	 --include-pointer /tool/hatch/envs/docs \
-	 . \
-	 pyproject.toml \
-	 > docs_requirements.txt && \
-	hatch run hatch-test.py$(PYTHON_VERSION):dependence freeze\
-	 -e pip \
-	 -e wheel \
-	 --include-pointer /tool/hatch/envs/hatch-test \
-	 . \
-	 pyproject.toml \
-	 > test_requirements.txt
+	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence update pyproject.toml --include-pointer /tool/hatch/envs/test
 
 # Test & check linting/formatting (for local use only)
 test:
