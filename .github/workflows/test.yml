@@ -9,7 +9,6 @@ on:
     - src/**
     - pyproject.toml
     - tests/**
-    - "*_requirements.txt"
     - .github/workflows/test.yml
 jobs:
   lint:
