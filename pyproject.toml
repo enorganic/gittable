@@ -38,19 +38,26 @@ packages = [
 ]
 sources = ["src"]
 
+[tool.hatch.build.targets.wheel.hooks.mypyc]
+dependencies = ["hatch-mypyc"]
+
 [tool.hatch.envs.default]
 python = "3.8"
 dependencies = [
-    "mypy",
     "pytest",
-    "ruff",
-    "dependence~=1.0",
+    "dependence~=1.0"
 ]
 pre-install-commands = [
     "pip install --upgrade pip setuptools",
 ]
+
+[tool.hatch.envs.hatch-static-analysis]
+extra-dependencies = ["pytest", "mypy", "dependence~=1.0"]
+pre-install-commands = [
+    "pip install --upgrade pip setuptools",
+]
 post-install-commands = [
-    "hatch run mypy --install-types --non-interactive || echo",
+    "hatch run hatch-static-analysis:mypy --install-types --non-interactive || echo",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -100,7 +107,7 @@ max-complexity = 10
 
 [tool.ruff.format]
 docstring-code-format = true
-docstring-code-line-length = 20
+docstring-code-line-length = 79
 
 [tool.black]
 line-length = 79

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import os
 from glob import iglob
@@ -5,9 +7,9 @@ from itertools import chain
 from shutil import move, rmtree
 from subprocess import check_call
 from tempfile import mkdtemp
-from typing import Iterable, Iterator, List, Tuple
+from typing import Iterable, Iterator
 
-from ._utilities import update_url_user_password
+from gittable._utilities import update_url_user_password
 
 
 def _iglob_recursive(pathname: str) -> Iterator[str]:
@@ -21,7 +23,7 @@ def download(
     branch: str = "",
     user: str = "",
     password: str = "",
-) -> List[str]:
+) -> list[str]:
     """
     Download files from a git repository and return a list of the files
     downloaded.
@@ -58,7 +60,7 @@ def download(
     path: str
     try:
         os.chdir(temp_directory)
-        matched_files: Tuple[str, ...] = tuple(
+        matched_files: tuple[str, ...] = tuple(
             filter(
                 os.path.isfile,
                 (
@@ -72,14 +74,13 @@ def download(
         )
     finally:
         os.chdir(current_directory)
-    downloaded_paths: List[str] = []
+    downloaded_paths: list[str] = []
     new_path: str
     for path in matched_files:
         relative_path: str = os.path.relpath(path, temp_directory)
         new_path = os.path.join(directory, relative_path)
         if os.path.sep in relative_path:
             os.makedirs(os.path.dirname(new_path), exist_ok=True)
-        print(new_path)
         move(path, new_path)
         downloaded_paths.append(new_path)
     rmtree(temp_directory, ignore_errors=True)

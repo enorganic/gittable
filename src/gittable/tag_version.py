@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import argparse
 import json
 import os
 import sys
-from typing import Dict
 
 try:
     from functools import cache  # type: ignore
@@ -12,23 +13,23 @@ from pathlib import Path
 from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
-from typing import Iterable, Tuple, Union
+from typing import Iterable, Union
 
-from gittable._utilities import check_output, get_exception_text
+from gittable._utilities import check_output
 
 
 @cache
-def _get_env() -> Dict[str, str]:
+def _get_env() -> dict[str, str]:
     """
     Get the environment variables
     """
-    env: Dict[str, str] = os.environ.copy()
+    env: dict[str, str] = os.environ.copy()
     env.pop("PIP_CONSTRAINT", None)
     return env
 
 
 def _get_hatch_version(
-    directory: Union[str, Path] = os.path.curdir,
+    directory: str | Path = os.path.curdir,
 ) -> str:
     """
     Get the version of the package using `hatch`, if available
@@ -48,7 +49,7 @@ def _get_hatch_version(
             if hatch
             else ""
         )
-    except Exception:
+    except Exception:  # noqa: S110 BLE001
         pass
     finally:
         os.chdir(current_directory)
@@ -56,7 +57,7 @@ def _get_hatch_version(
 
 
 def _get_poetry_version(
-    directory: Union[str, Path] = os.path.curdir,
+    directory: str | Path = os.path.curdir,
 ) -> str:
     """
     Get the version of the package using `poetry`, if available
@@ -77,7 +78,7 @@ def _get_poetry_version(
             if poetry
             else ""
         )
-    except Exception:
+    except Exception:  # noqa: S110 BLE001
         pass
     finally:
         os.chdir(current_directory)
@@ -85,7 +86,7 @@ def _get_poetry_version(
 
 
 def _get_pip_version(
-    directory: Union[str, Path] = os.path.curdir,
+    directory: str | Path = os.path.curdir,
 ) -> str:
     """
     Get the version of a package using `pip`
@@ -93,7 +94,7 @@ def _get_pip_version(
     if isinstance(directory, str):
         directory = Path(directory)
     directory = str(directory.resolve())
-    command: Tuple[str, ...] = ()
+    command: tuple[str, ...] = ()
     try:
         command = (
             sys.executable,
@@ -105,7 +106,7 @@ def _get_pip_version(
             "-e",
             directory,
         )
-        env: Dict[str, str] = os.environ.copy()
+        env: dict[str, str] = os.environ.copy()
         env.pop("PIP_CONSTRAINT", None)
         check_output(command, env=env)
         command = (
@@ -126,11 +127,10 @@ def _get_pip_version(
             if output:
                 output = f"{output}\n"
         current_directory: str = str(Path.cwd().resolve())
-        raise RuntimeError(
+        raise RuntimeError(  # noqa: TRY003
             "Unable to determine the project version:\n"
             f"$ cd {quote(current_directory)} && {list2cmdline(command)}\n"
             f"{output}"
-            f"{get_exception_text()}"
         ) from error
 
 

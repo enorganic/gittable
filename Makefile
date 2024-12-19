@@ -8,6 +8,7 @@ install:
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
 	hatch env create default && \
 	hatch env create docs && \
+	hatch env create hatch-static-analysis && \
 	hatch env create hatch-test && \
 	echo "Installation complete"
 
@@ -39,6 +40,12 @@ upgrade:
 	 pyproject.toml > .requirements.txt && \
 	hatch run docs:pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
+	hatch run hatch-static-analysis:dependence freeze\
+	 --include-pointer /tool/hatch/envs/docs\
+	 --include-pointer /project\
+	 pyproject.toml > .requirements.txt && \
+	hatch run hatch-static-analysis:pip install --upgrade --upgrade-strategy eager\
+	 -r .requirements.txt && \
 	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence freeze\
 	 --include-pointer /tool/hatch/envs/hatch-test\
 	 --include-pointer /project\
@@ -63,13 +70,11 @@ requirements:
 test:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	hatch run lint && hatch test -c
+	hatch fmt --check && hatch run hatch-static-analysis:mypy && hatch test -c
 
 format:
-	hatch run ruff check --select I --fix . && \
-	hatch run ruff format . && \
-	hatch run ruff check . && \
-	hatch run mypy && \
+	hatch fmt && \
+	hatch run hatch-static-analysis:mypy && \
 	echo "Format Successful!"
 
 docs:

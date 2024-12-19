@@ -1,13 +1,16 @@
 import sys
 from importlib import import_module
-from types import ModuleType
+from typing import TYPE_CHECKING
 
-from . import __name__ as _module_name
-from ._utilities import get_exception_text
+if TYPE_CHECKING:
+    from types import ModuleType
+
+from gittable import __name__ as _module_name
+from gittable._utilities import get_exception_text
 
 
 def _print_help() -> None:
-    print(
+    print(  # noqa: T201
         "Usage:\n"
         "  gittable <command> [options]\n\n"
         "Commands:\n"
@@ -43,7 +46,7 @@ def main() -> None:
             module = import_module(f"{_module_name}.{command}")
         module.main()  # type: ignore
     except ImportError:
-        print(get_exception_text())
+        print(get_exception_text())  # noqa: T201
         _print_help()
 
 
