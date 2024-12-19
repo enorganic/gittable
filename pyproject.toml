@@ -89,7 +89,7 @@ line-length = 79
 
 [tool.ruff.lint]
 ignore = [
-    "F842",
+    "F842", "INP001"
 ]
 extend-select = [
     "E",

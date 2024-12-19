@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import os
 from shutil import rmtree
 from subprocess import check_output
 from tempfile import mkdtemp
-from typing import List
 
 import pytest
 
@@ -41,7 +42,7 @@ def test_git_download() -> None:
             encoding="utf-8",
             universal_newlines=True,
         ).strip()
-        py_paths: List[str] = download(
+        py_paths: list[str] = download(
             origin, files="**/*.py", directory=temp_directory
         )
         assert py_paths

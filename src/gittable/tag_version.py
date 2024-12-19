@@ -13,7 +13,7 @@ from pathlib import Path
 from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
-from typing import Iterable, Union
+from typing import Iterable
 
 from gittable._utilities import check_output
 
@@ -128,14 +128,14 @@ def _get_pip_version(
                 output = f"{output}\n"
         current_directory: str = str(Path.cwd().resolve())
         raise RuntimeError(  # noqa: TRY003
-            "Unable to determine the project version:\n"
+            "Unable to determine the project version:\n"  # noqa: EM102
             f"$ cd {quote(current_directory)} && {list2cmdline(command)}\n"
             f"{output}"
         ) from error
 
 
 def _get_python_project_version(
-    directory: Union[str, Path] = "",
+    directory: str | Path = "",
 ) -> str:
     """
     Get a python project's version. Currently supports `hatch`, `poetry`, and
@@ -149,7 +149,7 @@ def _get_python_project_version(
 
 
 def tag_version(
-    directory: Union[str, Path] = os.path.curdir, message: str = ""
+    directory: str | Path = os.path.curdir, message: str = ""
 ) -> str:
     """
     Tag your project with the package version number *if* no pre-existing
@@ -211,7 +211,7 @@ def main() -> None:
         ),
     )
     arguments: argparse.Namespace = parser.parse_args()
-    print(
+    print(  # noqa: T201
         tag_version(directory=arguments.directory, message=arguments.message)
     )
 
