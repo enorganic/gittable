@@ -38,6 +38,9 @@ packages = [
 ]
 sources = ["src"]
 
+# [tool.hatch.build.targets.wheel.hooks.mypyc]
+# dependencies = ["hatch-mypyc"]
+
 [tool.hatch.envs.default]
 python = "3.8"
 dependencies = [
