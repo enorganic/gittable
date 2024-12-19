@@ -60,9 +60,6 @@ post-install-commands = [
     "hatch run hatch-static-analysis:mypy --install-types --non-interactive || echo",
 ]
 
-[tool.hatch.envs.default.scripts]
-lint = "ruff check . && ruff format --check . && mypy"
-
 [tool.hatch.envs.docs]
 python = "3.13"
 dependencies = [
