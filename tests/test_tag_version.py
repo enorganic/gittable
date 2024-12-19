@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
 from shutil import rmtree, which
 from subprocess import check_call
-from typing import Tuple
 
 import pytest
 
@@ -36,7 +37,7 @@ def _test_project_tag_version(project_directory: Path) -> None:
     os.chdir(project_directory)
     try:
         # Verify that the tag was created successfully
-        tags: Tuple[str, ...] = tuple(
+        tags: tuple[str, ...] = tuple(
             check_output(
                 (GIT, "tag"),
             )
@@ -71,6 +72,8 @@ def test_hatch_project_tag_version() -> None:
     except Exception:
         if os.environ.get("CI", None) and sys.platform != "linux":
             pytest.skip("Skipping hatch project test on windows/mac CI")
+        else:
+            raise
 
 
 def test_poetry_project_tag_version() -> None:
@@ -85,6 +88,8 @@ def test_poetry_project_tag_version() -> None:
     except Exception:
         if os.environ.get("CI", None) and sys.platform != "linux":
             pytest.skip("Skipping hatch project test on windows/mac CI")
+        else:
+            raise
 
 
 if __name__ == "__main__":

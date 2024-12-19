@@ -1,10 +1,14 @@
+from __future__ import annotations
+
 import sys
-from pathlib import Path
 from subprocess import DEVNULL, PIPE, list2cmdline, run
 from traceback import format_exception
-from typing import Callable, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Callable
 from urllib.parse import ParseResult, urlparse, urlunparse
 from urllib.parse import quote as _quote
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def update_url_user_password(
@@ -24,7 +28,8 @@ def update_url_user_password(
     - quote = urllib.parse.quote: A function to use for escaping
       invalid character (defaults to `urllib.parse.quote`)
     """
-    assert url and user
+    if not (url and user):
+        raise ValueError(url, user)
     parse_result: ParseResult = urlparse(url)
     host: str = parse_result.netloc.rpartition("@")[-1]
     user_password: str = quote(user)
@@ -53,10 +58,11 @@ def get_exception_text() -> str:
 
 
 def check_output(
-    args: Tuple[str, ...],
-    cwd: Union[str, Path] = "",
+    args: tuple[str, ...],
+    cwd: str | Path = "",
+    *,
     echo: bool = False,
-    env: Optional[Dict[str, str]] = None,
+    env: dict[str, str] | None = None,
 ) -> str:
     """
     This function mimics `subprocess.check_output`, but redirects stderr
@@ -68,9 +74,9 @@ def check_output(
     """
     if echo:
         if cwd:
-            print("$", "cd", cwd, "&&", list2cmdline(args))
+            print("$", "cd", cwd, "&&", list2cmdline(args))  # noqa: T201
         else:
-            print("$", list2cmdline(args))
+            print("$", list2cmdline(args))  # noqa: T201
     output: str = run(
         args,
         stdout=PIPE,
@@ -80,5 +86,5 @@ def check_output(
         env=env,
     ).stdout.decode("utf-8", errors="ignore")
     if echo:
-        print(output)
+        print(output)  # noqa: T201
     return output
