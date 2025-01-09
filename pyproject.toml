@@ -45,6 +45,7 @@ sources = ["src"]
 python = "3.8"
 dependencies = [
     "pytest",
+    "mypy",
     "dependence~=1.0"
 ]
 pre-install-commands = [

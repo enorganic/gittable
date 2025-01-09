@@ -70,11 +70,12 @@ requirements:
 test:
 	{ hatch --version || pipx install --upgrade hatch || python3 -m pip install --upgrade hatch ; } && \
 	{ poetry --version || pipx install --upgrade poetry || python3 -m pip install --upgrade poetry ; } && \
-	hatch fmt --check && hatch run hatch-static-analysis:mypy && hatch test -c
+	hatch fmt --check && hatch run mypy && hatch test -c
 
 format:
-	hatch fmt && \
-	hatch run hatch-static-analysis:mypy && \
+	hatch fmt --formatter
+	hatch fmt --linter
+	hatch run mypy && \
 	echo "Format Successful!"
 
 docs:
