@@ -37,7 +37,7 @@ def _get_hatch_version(
     """
     Get the version of the package using `hatch`, if available
     """
-    if isinstance(directory, str):
+    if isinstance(directory, str):  # pragma: no cover
         directory = Path(directory)
     directory = str(directory.resolve())
     current_directory: str = str(Path.cwd().resolve())
@@ -65,7 +65,7 @@ def _get_poetry_version(
     """
     Get the version of the package using `poetry`, if available
     """
-    if isinstance(directory, Path):
+    if isinstance(directory, Path):  # pragma: no cover
         directory = str(Path(directory).resolve())
     current_directory: str = str(Path.cwd().resolve())
     os.chdir(directory)
@@ -94,7 +94,7 @@ def _get_pip_version(
     """
     Get the version of a package using `pip`
     """
-    if isinstance(directory, str):
+    if isinstance(directory, str):  # pragma: no cover
         directory = Path(directory)
     directory = str(directory.resolve())
     command: tuple[str, ...] = ()
@@ -123,7 +123,7 @@ def _get_pip_version(
             directory,
         )
         return json.loads(check_output(command, env=_get_env()))[0]["version"]
-    except Exception as error:
+    except Exception as error:  # pragma: no cover
         output: str = ""
         if isinstance(error, CalledProcessError):
             output = (error.output or error.stderr or b"").decode().strip()
@@ -165,7 +165,7 @@ def tag_version(
     Returns:
         The version number
     """
-    if isinstance(directory, str):
+    if isinstance(directory, str):  # pragma: no cover
         directory = Path(directory)
     directory = str(directory.resolve())
     version: str = _get_python_project_version(directory)
@@ -176,7 +176,7 @@ def tag_version(
             str.strip,
             check_output(("git", "tag")).strip().split("\n"),
         )
-        if version not in tags:
+        if version not in tags:  # pragma: no cover
             check_output(
                 ("git", "tag", "-a", version, "-m", message or version)
             )
@@ -185,7 +185,7 @@ def tag_version(
     return version
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         prog="gittable tag-version",
         description=(
@@ -219,5 +219,5 @@ def main() -> None:
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

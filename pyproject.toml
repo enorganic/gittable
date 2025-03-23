@@ -132,6 +132,7 @@ disallow_incomplete_defs = true
 [tool.coverage.report]
 fail_under = 80
 
-[tool.coverage.paths]
+[tool.coverage.run]
 source = ["src"]
+omit = ["src/**/__main__.py"]
 

@@ -90,7 +90,7 @@ def download(
     return downloaded_paths
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         prog="gittable download",
         description=(
@@ -152,5 +152,5 @@ def main() -> None:
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
