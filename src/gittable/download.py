@@ -7,9 +7,12 @@ from itertools import chain
 from shutil import move, rmtree
 from subprocess import check_call
 from tempfile import mkdtemp
-from typing import Iterable, Iterator
+from typing import TYPE_CHECKING
 
 from gittable._utilities import update_url_user_password
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 
 def _iglob_recursive(pathname: str) -> Iterator[str]:

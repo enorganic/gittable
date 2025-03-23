@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import sys
+from typing import TYPE_CHECKING
 
 try:
     from functools import cache  # type: ignore
@@ -13,9 +14,11 @@ from pathlib import Path
 from shlex import quote
 from shutil import which
 from subprocess import CalledProcessError, list2cmdline
-from typing import Iterable
 
 from gittable._utilities import check_output
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 @cache
