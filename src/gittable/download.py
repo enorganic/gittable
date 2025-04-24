@@ -4,6 +4,7 @@ import argparse
 import os
 from glob import iglob
 from itertools import chain
+from pathlib import Path
 from shutil import move, rmtree
 from subprocess import check_call
 from tempfile import mkdtemp
@@ -22,7 +23,7 @@ def _iglob_recursive(pathname: str) -> Iterator[str]:
 def download(
     repo: str,
     files: Iterable[str] = ("**",),
-    directory: str = "",
+    directory: Path | str | None = None,
     branch: str = "",
     user: str = "",
     password: str = "",
@@ -45,11 +46,15 @@ def download(
     """
     if isinstance(files, str):
         files = (files,)
-    if not directory:
-        directory = os.path.curdir
+    if directory:
+        if isinstance(directory, Path):
+            directory = str(directory.absolute())
+        else:
+            directory = os.path.abspath(directory)
+    else:
+        directory = os.path.abspath(os.path.curdir)
     if user or password:
         repo = update_url_user_password(repo, user, password)
-    directory = os.path.abspath(directory)
     # Shallow clone into a temp directory
     temp_directory: str = mkdtemp(prefix="git_download_")
     check_call(
