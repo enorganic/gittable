@@ -1,6 +1,6 @@
 SHELL := bash
 .PHONY: docs
-MINIMUM_PYTHON_VERSION := 3.8
+MINIMUM_PYTHON_VERSION := 3.9
 
 # Create all environments
 install:
@@ -64,7 +64,9 @@ requirements:
 	 --include-pointer /project\
 	 pyproject.toml && \
 	hatch run docs:dependence update pyproject.toml --include-pointer /tool/hatch/envs/docs && \
-	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence update pyproject.toml --include-pointer /tool/hatch/envs/test
+	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence update pyproject.toml --include-pointer /tool/hatch/envs/hatch-test && \
+	hatch run hatch-static-analysis:dependence update pyproject.toml --include-pointer /tool/hatch/envs/hatch-static-analysis && \
+	echo "Requirements updated"
 
 # Test & check linting/formatting (for local use only)
 test:

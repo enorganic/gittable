@@ -6,11 +6,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gittable"
-version = "0.0.3"
+version = "0.0.4"
 description = "Get stuff from Git"
 readme = "README.md"
 license = "MIT"
-requires-python = "~=3.8"
+requires-python = "~=3.9"
 authors = [
     { email = "david@belais.me" },
 ]
@@ -42,7 +42,7 @@ sources = ["src"]
 # dependencies = ["hatch-mypyc"]
 
 [tool.hatch.envs.default]
-python = "3.8"
+python = "3.9"
 dependencies = [
     "pytest",
     "mypy",
@@ -80,7 +80,7 @@ pre-install-commands = []
 post-install-commands = []
 
 [[tool.hatch.envs.hatch-test.matrix]]
-python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.ruff]
 line-length = 79
@@ -110,7 +110,6 @@ docstring-code-line-length = 79
 [tool.black]
 line-length = 79
 target-version = [
-    "py38",
     "py39",
     "py310",
     "py311",
@@ -119,7 +118,7 @@ target-version = [
 ]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 files = [
     "src",
     "tests",
@@ -133,6 +132,7 @@ disallow_incomplete_defs = true
 [tool.coverage.report]
 fail_under = 80
 
-[tool.coverage.paths]
+[tool.coverage.run]
 source = ["src"]
+omit = ["src/**/__main__.py"]
 
