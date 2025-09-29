@@ -1,22 +1,16 @@
 [build-system]
-requires = [
-    "hatchling",
-]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "gittable"
-version = "0.0.4"
+version = "0.1.0"
 description = "Get stuff from Git"
 readme = "README.md"
 license = "MIT"
 requires-python = "~=3.9"
-authors = [
-    { email = "david@belais.me" },
-]
-keywords = [
-    "git",
-]
+authors = [{ email = "david@belais.me" }]
+keywords = ["git"]
 dependencies = []
 
 [project.scripts]
@@ -27,36 +21,25 @@ Documentation = "https://gittable.enorganic.org"
 Repository = "https://github.com/enorganic/gittable"
 
 [tool.hatch.build.targets.sdist]
-packages = [
-    "src/gittable",
-]
-sources = ["src"]
+packages = ["src/gittable"]
+
+[tool.hatch.build.targets.sdist.sources]
+src = ""
 
 [tool.hatch.build.targets.wheel]
-packages = [
-    "src/gittable",
-]
-sources = ["src"]
+packages = ["src/gittable"]
 
-# [tool.hatch.build.targets.wheel.hooks.mypyc]
-# dependencies = ["hatch-mypyc"]
+[tool.hatch.build.targets.wheel.sources]
+src = ""
 
 [tool.hatch.envs.default]
 python = "3.9"
-dependencies = [
-    "pytest",
-    "mypy",
-    "dependence~=1.0"
-]
-pre-install-commands = [
-    "pip install --upgrade pip setuptools",
-]
+dependencies = ["pytest", "mypy", "dependence~=1.2"]
+pre-install-commands = ["uv pip install --upgrade pip"]
 
 [tool.hatch.envs.hatch-static-analysis]
-extra-dependencies = ["pytest", "mypy", "dependence~=1.0"]
-pre-install-commands = [
-    "pip install --upgrade pip setuptools",
-]
+extra-dependencies = ["pytest", "mypy", "dependence~=1.2"]
+pre-install-commands = ["uv pip install --upgrade pip"]
 post-install-commands = [
     "hatch run hatch-static-analysis:mypy --install-types --non-interactive || echo",
 ]
@@ -67,15 +50,13 @@ dependencies = [
     "mkdocs-material",
     "mkdocstrings[python]",
     "black",
-    "dependence~=1.0",
+    "dependence~=1.2",
 ]
 pre-install-commands = []
 post-install-commands = []
 
 [tool.hatch.envs.hatch-test]
-extra-dependencies = [
-    "dependence~=1.0",
-]
+extra-dependencies = ["dependence~=1.2"]
 pre-install-commands = []
 post-install-commands = []
 
@@ -86,19 +67,8 @@ python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 line-length = 79
 
 [tool.ruff.lint]
-ignore = [
-    "F842", "INP001"
-]
-extend-select = [
-    "E",
-    "F",
-    "UP",
-    "B",
-    "SIM",
-    "I",
-    "C",
-    "N",
-]
+ignore = ["F842", "INP001"]
+extend-select = ["E", "F", "UP", "B", "SIM", "I", "C", "N"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
@@ -109,23 +79,12 @@ docstring-code-line-length = 79
 
 [tool.black]
 line-length = 79
-target-version = [
-    "py39",
-    "py310",
-    "py311",
-    "py312",
-    "py313",
-]
+target-version = ["py39", "py310", "py311", "py312", "py313"]
 
 [tool.mypy]
 python_version = "3.9"
-files = [
-    "src",
-    "tests",
-]
-exclude = [
-    "tests/projects",
-]
+files = ["src", "tests"]
+exclude = ["tests/projects"]
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 
@@ -135,4 +94,3 @@ fail_under = 80
 [tool.coverage.run]
 source = ["src"]
 omit = ["src/**/__main__.py"]
-

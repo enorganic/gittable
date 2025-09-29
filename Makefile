@@ -25,35 +25,25 @@ distribute:
 	hatch build && hatch publish && rm -rf dist
 
 # This will upgrade all requirements, and refresh pinned requirements to
-# match
+# match. The same can be accomplished with `make reinstall`, but this
+# runs faster, because environments are not recreated.
 upgrade:
-	hatch run dependence freeze\
+	hatch run dependence upgrade\
 	 --include-pointer /tool/hatch/envs/default\
 	 --include-pointer /project\
-	 pyproject.toml > .requirements.txt && \
-	hatch run pip install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
-	rm .requirements.txt && \
-	hatch run docs:dependence freeze\
+	 pyproject.toml && \
+	hatch run docs:dependence upgrade\
 	 --include-pointer /tool/hatch/envs/docs\
 	 --include-pointer /project\
-	 pyproject.toml > .requirements.txt && \
-	hatch run docs:pip install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
-	hatch run hatch-static-analysis:dependence freeze\
-	 --include-pointer /tool/hatch/envs/docs\
+	 pyproject.toml && \
+	hatch run hatch-static-analysis:dependence upgrade\
+	 --include-pointer /tool/hatch/envs/hatch-static-analysis\
 	 --include-pointer /project\
-	 pyproject.toml > .requirements.txt && \
-	hatch run hatch-static-analysis:pip install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
-	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence freeze\
+	 pyproject.toml && \
+	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):dependence upgrade\
 	 --include-pointer /tool/hatch/envs/hatch-test\
 	 --include-pointer /project\
-	 pyproject.toml > .requirements.txt && \
-	hatch run hatch-test.py$(MINIMUM_PYTHON_VERSION):pip install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
-	rm .requirements.txt && \
-	make requirements
+	 pyproject.toml
 
 # This will update pinned requirements to align with the
 # package versions installed in each environment, and will align the project
