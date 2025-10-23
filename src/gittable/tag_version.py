@@ -152,7 +152,10 @@ def _get_python_project_version(
 
 
 def tag_version(
-    directory: str | Path = os.path.curdir, message: str = ""
+    directory: str | Path = os.path.curdir,
+    message: str | None = None,
+    prefix: str | None = None,
+    suffix: str | None = None,
 ) -> str:
     """
     Tag your project with the package version number *if* no pre-existing
@@ -161,27 +164,29 @@ def tag_version(
     Parameters:
         directory:
         message:
+        prefix:
+        suffix:
 
     Returns:
-        The version number
+        The version number, including any prefix or suffix.
     """
     if isinstance(directory, str):  # pragma: no cover
         directory = Path(directory)
     directory = str(directory.resolve())
     version: str = _get_python_project_version(directory)
-    current_directory: str = str(Path.cwd().resolve())
-    os.chdir(directory)
-    try:
-        tags: Iterable[str] = map(
-            str.strip,
-            check_output(("git", "tag")).strip().split("\n"),
+    if prefix:
+        version = f"{prefix}{version}"
+    if suffix:
+        version = f"{version}{suffix}"
+    tags: Iterable[str] = map(
+        str.strip,
+        check_output(("git", "tag"), cwd=directory).strip().split("\n"),
+    )
+    if version not in tags:  # pragma: no cover
+        check_output(
+            ("git", "tag", "-a", version, "-m", message or version),
+            cwd=directory,
         )
-        if version not in tags:  # pragma: no cover
-            check_output(
-                ("git", "tag", "-a", version, "-m", message or version)
-            )
-    finally:
-        os.chdir(current_directory)
     return version
 
 
@@ -213,9 +218,26 @@ def main() -> None:  # pragma: no cover
             "used."
         ),
     )
+    parser.add_argument(
+        "--prefix",
+        default="",
+        type=str,
+        help="A string with which to prefix the version number in the tag.",
+    )
+    parser.add_argument(
+        "--suffix",
+        default="",
+        type=str,
+        help="A string with which to suffix the version number in the tag.",
+    )
     arguments: argparse.Namespace = parser.parse_args()
     print(  # noqa: T201
-        tag_version(directory=arguments.directory, message=arguments.message)
+        tag_version(
+            directory=arguments.directory,
+            message=arguments.message,
+            suffix=arguments.suffix,
+            prefix=arguments.prefix,
+        )
     )
 
 
